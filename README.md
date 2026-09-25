@@ -1,10 +1,163 @@
 # AI Resume Screening Assistant
 
-An explainable and transparent candidate qualification tool that extracts candidate skill sets, analyzes experience against job requirements, and provides unbiased candidate match scores.
+[![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?style=flat&logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110.0-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
+[![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-Part of the **50 AI Automation Projects Portfolio** by [ERHA TECHNOLOGIES](https://github.com/erhatechnologiesai).
+An explainable AI resume screening system that matches candidate qualifications against job requirements, conducts skill gap analysis, and generates transparent scoring reports.
 
-## Testing
+---
+
+## Key Features
+
+- **Objective**: skill and experience extraction eliminating demographic bias
+- **Candidate-to-Job**: Description semantic match scoring
+- **Transparent**: skill gap breakdown highlighting missing required qualifications
+- **Customizable**: role requirement weighting (Must-haves vs Nice-to-haves)
+- **FastAPI**: endpoint returning structured candidate evaluations
+
+---
+
+## Architecture
+
+```mermaid
+flowchart LR
+    Resume([Candidate Resume]) --> Parser[Experience & Skill Extractor]
+    JD([Job Description]) --> Parser
+    Parser --> MatchEngine[Semantic Match Engine]
+    MatchEngine --> GapAnalysis[Skill Gap Breakdown]
+    GapAnalysis --> ScoreCard[Transparent Evaluation Scorecard]
+```
+
+---
+
+## Tech Stack
+
+| Component | Technology | Purpose |
+|---|---|---|
+| **Runtime** | Python 3.12 | Core execution environment |
+| **API Framework** | FastAPI & Uvicorn | High-performance asynchronous REST endpoints |
+| **Data Validation** | Pydantic v2 | Strict schema validation and serialization |
+| **Domain Engine** | Dual-Mode (Local + LLM) | Production-ready AI logic with offline test capability |
+| **Testing** | Unittest & Pytest | Deterministic automated verification suite |
+
+---
+
+## Project Structure
+
+```text
+ai-resume-screening-assistant/
+├── app/
+│   ├── __init__.py
+│   ├── api.py           # FastAPI routes and server definitions
+│   ├── config.py        # Environment variables and application settings
+│   ├── models.py        # Pydantic data schemas
+│   └── services/        # Core business and AI automation logic
+├── tests/
+│   ├── __init__.py
+│   └── test_resume_screening.py   # Automated test suite
+├── .env.example         # Template for environment configuration
+├── .gitignore           # Python and runtime exclusions
+├── LICENSE              # MIT License
+├── README.md            # Comprehensive project documentation
+└── requirements.txt     # Python package dependencies
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Python 3.10+ (Python 3.12 recommended)
+- `pip` package manager
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/erhatechnologiesai/ai-resume-screening-assistant.git
+   cd ai-resume-screening-assistant
+   ```
+
+2. **Create and activate a virtual environment:**
+   ```bash
+   python -m venv venv
+   # On Windows:
+   venv\Scripts\activate
+   # On macOS/Linux:
+   source venv/bin/activate
+   ```
+
+3. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Configure environment variables:**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration if running in live mode
+   ```
+
+---
+
+## Running the Application
+
+Start the local development server with auto-reload:
+
+```bash
+python -m uvicorn app.api:app --reload --host 0.0.0.0 --port 8000
+```
+
+Once running, interactive documentation is accessible at:
+- **Swagger UI**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+- **ReDoc**: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
+
+---
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/screen` | Screen candidate resume against job description requirements |
+
+### Example Request
+
+```bash
+curl -X POST http://127.0.0.1:8000/screen -H "Content-Type: application/json" -d '{"job_description": "Senior Python Backend Engineer with FastAPI and Kubernetes", "resume_text": "10 years Python, 4 years FastAPI, deployed microservices on AWS EKS"}'
+```
+
+---
+
+## Running Tests
+
+Execute the automated test suite:
+
 ```bash
 python -m unittest tests/test_resume_screening.py
 ```
+
+Or using pytest:
+
+```bash
+pytest tests/
+```
+
+All test cases are self-contained and run offline without requiring third-party API credentials.
+
+---
+
+## Security & Best Practices
+
+- **Zero Credential Leakage**: API tokens and secrets are loaded exclusively via environment variables and excluded by `.gitignore`.
+- **Strict Validation**: All incoming request payloads are strictly validated using Pydantic schemas.
+- **Fail-Safe Fallbacks**: Deterministic offline engines guarantee application continuity even during external provider outages.
+
+---
+
+## License
+
+This project is licensed under the terms of the [MIT License](LICENSE).
